@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class BoardGUI extends JPanel implements ActionListener {
+public class GUIManager extends JPanel implements ActionListener {
     private Board board;
     private JFrame frame = new JFrame();
     private JPanel boardPanel = new JPanel();
@@ -65,7 +65,7 @@ public class BoardGUI extends JPanel implements ActionListener {
         cancelMoveButton.setEnabled(enabled);
     }
 
-    public BoardGUI() {
+    public GUIManager() {
         frame.setSize(400, 500);
         frame.setLocationRelativeTo(null);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

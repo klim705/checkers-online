@@ -3,12 +3,12 @@ package checkers;
 public class OnlineCheckersClient {
     public static Piece.Color playerColor;
     public static Board board;
-    public static BoardGUI boardGUI;
+    public static GUIManager GUIManager;
 
     public static void main(String args[]) {
-        //board = OnlineCheckersServer.getBoard();
+        // TODO: connect to server, get board from client upon successful connection
         board = new Board();
-        boardGUI = new BoardGUI();
-        boardGUI.setup(board);
+        GUIManager = new GUIManager();
+        GUIManager.setup(board);
     }
 }

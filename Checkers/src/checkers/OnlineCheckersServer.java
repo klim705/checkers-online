@@ -1,10 +1,18 @@
 package checkers;
 
 public class OnlineCheckersServer {
-    // should setup a Board passed to each client.
     private Board board;
+    private OnlineCheckersClient client1;
+    private OnlineCheckersClient client2;
+    private int port;
 
-    public Board getBoard() {
+    public OnlineCheckersServer() {
+        board = new Board();
+    }
+
+    public Board sendBoard() {
         return board;
     }
+
+    // TODO: check win conditions
 }
