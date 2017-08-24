@@ -7,6 +7,8 @@ public class Piece {
     private boolean isKing;
     private boolean selected;
 
+    public Piece() {}
+
     public Piece(Color color) {
         this.color = color;
         isKing = false;

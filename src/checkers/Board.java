@@ -125,4 +125,56 @@ public class Board {
     public void cancelMove() {
         move.clear();
     }
+
+    public boolean areAllCaptured(Piece.Color color) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if (Math.abs(i - j) % 2 != 0) {
+                    if (cells[i][j].hasPiece()) {
+                        if (cells[i][j].getPiece().getColor() == color) {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean canPlayerMove(Piece.Color color) {
+        for (int i = 0; i < cells.length; i++) {
+            for (int j = 0; j < cells[i].length; j++) {
+                if (Math.abs(i - j) % 2 != 0) {
+                    if (cells[i][j].hasPiece()) {
+                        if (cells[i][j].getPiece().getColor() == color) {
+                            if (canPieceMove(cells[i][j])) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean canPieceMove(BoardCell boardCell) {
+        int row = boardCell.row;
+        int column = boardCell.column;
+        int startRow = row - 2 >= 0 ? row - 2 : row - 1 >= 0 ? row - 1 : row;
+        int endRow = row + 2 < cells.length ? row + 2 : row + 1 < cells.length ? row + 1 : row;
+        int startColumn = column - 2 >= 0 ? column - 2 : column - 1 >= 0 ? column - 1 : column;
+        int endColumn = column + 2 < cells.length ? column + 2 : column + 1 < cells.length ? column + 1 : column;
+        CheckersMove tempMove = new CheckersMove();
+        tempMove.add(boardCell);
+
+        for (int i = startRow; i <= endRow; i++) {
+            for (int j = startColumn; j <= endColumn; j++) {
+                if (addRemoveCellToMove(i, j)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

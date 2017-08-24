@@ -5,8 +5,18 @@ import com.esotericsoftware.kryonet.EndPoint;
 
 public class Network {
     // This registers objects that are going to be sent over the network.
-    static public void register (EndPoint endPoint) {
+    static public void register(EndPoint endPoint) {
         Kryo kryo = endPoint.getKryo();
+        kryo.register(checkers.Board.class);
+        kryo.register(checkers.BoardCell.class);
+        kryo.register(checkers.BoardCell.Color.class);
+        kryo.register(checkers.BoardCell[].class);
+        kryo.register(checkers.BoardCell[][].class);
+        kryo.register(checkers.CheckersMove.class);
+        kryo.register(checkers.MoveValidator.class);
+        kryo.register(checkers.Piece.class);
+        kryo.register(checkers.Piece.Color.class);
+        kryo.register(java.util.ArrayList.class);
         kryo.register(NetBoard.class);
         kryo.register(Player.class);
         kryo.register(NewConnect.class);

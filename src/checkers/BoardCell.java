@@ -9,6 +9,8 @@ public class BoardCell {
     public Piece piece;
     private boolean selected;
 
+    public BoardCell() {}
+
     public BoardCell(int row, int column, Color color) {
         this.row = row;
         this.column = column;
