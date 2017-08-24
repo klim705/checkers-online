@@ -14,10 +14,11 @@ public class GUIManager extends JPanel implements ActionListener {
     private JPanel bottomButtonsPanel = new JPanel();
     private JPanel moveActionButtonsPanel = new JPanel();
     private JButton newGameButton = new JButton("New Game");
-    private JButton submitMoveButton = new JButton("Apply");
+    private JButton submitMoveButton = new JButton("OK");
     private JButton cancelMoveButton = new JButton("Cancel");
+    private JButton forfeitButton = new JButton("Forfeit");
     private JPanel playerTurnPanel = new JPanel();
-    private JLabel playerTurnLabel = new JLabel("Player 1's Turn");
+    private JLabel playerTurnLabel = new JLabel("Red's Turn");
 
     private ImageIcon greenSquareIcon = new ImageIcon("resources/OddEmpty.png");
     private ImageIcon whiteSquareIcon = new ImageIcon("resources/EvenEmpty.png");
@@ -65,82 +66,6 @@ public class GUIManager extends JPanel implements ActionListener {
         cancelMoveButton.setEnabled(enabled);
     }
 
-    public GUIManager() {
-        frame.setSize(400, 500);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setTitle("Online Checkers");
-        //this.pack();
-        frame.setResizable(false);
-    }
-
-    public void setup(Board board) {
-        this.board = board;
-        Container cP = frame.getContentPane();
-        cP.add(boardPanel, BorderLayout.CENTER);
-        playerTurnPanel.add(playerTurnLabel);
-        newGameButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                board.resetBoard();
-                refreshBoard();
-            }
-        });
-        bottomButtonsPanel.add(newGameButton, BorderLayout.WEST);
-        submitMoveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                board.submitMove();
-                setMoveActionButtonsEnabled(false);
-                refreshBoard();
-            }
-        });
-        cancelMoveButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                board.cancelMove();
-                refreshBoard();
-            }
-        });
-        moveActionButtonsPanel.add(submitMoveButton);
-        moveActionButtonsPanel.add(cancelMoveButton);
-        setMoveActionButtonsEnabled(false);
-        bottomButtonsPanel.add(moveActionButtonsPanel, BorderLayout.EAST);
-        hudPanel.add(bottomButtonsPanel, BorderLayout.CENTER);
-        cP.add(playerTurnPanel, BorderLayout.NORTH);
-        cP.add(hudPanel, BorderLayout.SOUTH);
-        boardPanel.setLayout(new GridLayout(8, 8));
-
-        for (int i = 0; i < board.cells.length; i++) {
-            for (int j = 0; j < board.cells[i].length; j++) {
-                boardButtons[i][j] = new JButton("");
-                setBoardCellIcon(i, j, board.cells[i][j]);
-                boardButtons[i][j].addActionListener(this);
-                boardButtons[i][j].setActionCommand("" + i + "" + j);
-                boardPanel.add(boardButtons[i][j]);
-            }
-        }
-
-        frame.setVisible(true);
-    }
-
-    public void refreshBoard() {
-        for (int i = 0; i < board.cells.length; i++) {
-            for (int j = 0; j < board.cells[i].length; j++) {
-                setBoardCellIcon(i, j, board.cells[i][j]);
-            }
-        }
-    }
-
-    public void actionPerformed(ActionEvent e) {
-        String command = e.getActionCommand();
-        int row = Integer.parseInt("" + command.charAt(0));
-        int column = Integer.parseInt("" + command.charAt(1));
-        boolean result = board.addRemoveCellToMove(row, column);
-        if (result) {
-            updateSelectedIcon(row, column);
-        }
-        setMoveActionButtonsEnabled(board.isMoveSelected());
-        setSubmitButtonEnabled(board.isMoveValid());
-    }
-
     private void updateSelectedIcon(int row, int column) {
         BoardCell cell = board.getCellAt(row, column);
         cell.toggleSelected();
@@ -185,5 +110,90 @@ public class GUIManager extends JPanel implements ActionListener {
                 }
             }
         }
+    }
+
+    public GUIManager() {
+        frame.setSize(400, 500);
+        frame.setLocationRelativeTo(null);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setTitle("Online Checkers");
+        frame.setResizable(false);
+    }
+
+    public void setup(Board board) {
+        this.board = board;
+        Container cP = frame.getContentPane();
+        cP.add(boardPanel, BorderLayout.CENTER);
+        playerTurnPanel.add(playerTurnLabel);
+        newGameButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                board.resetBoard();
+                refreshBoard();
+            }
+        });
+        bottomButtonsPanel.add(newGameButton, BorderLayout.WEST);
+        submitMoveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                board.submitMove();
+                setMoveActionButtonsEnabled(false);
+                refreshBoard();
+            }
+        });
+        cancelMoveButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                board.cancelMove();
+                refreshBoard();
+            }
+        });
+        forfeitButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        moveActionButtonsPanel.add(submitMoveButton);
+        moveActionButtonsPanel.add(cancelMoveButton);
+        setMoveActionButtonsEnabled(false);
+        bottomButtonsPanel.add(moveActionButtonsPanel, BorderLayout.EAST);
+        hudPanel.add(bottomButtonsPanel, BorderLayout.CENTER);
+        cP.add(playerTurnPanel, BorderLayout.NORTH);
+        cP.add(hudPanel, BorderLayout.SOUTH);
+        boardPanel.setLayout(new GridLayout(8, 8));
+
+        for (int i = 0; i < board.cells.length; i++) {
+            for (int j = 0; j < board.cells[i].length; j++) {
+                boardButtons[i][j] = new JButton("");
+                setBoardCellIcon(i, j, board.cells[i][j]);
+                boardButtons[i][j].addActionListener(this);
+                boardButtons[i][j].setActionCommand("" + i + "" + j);
+                boardPanel.add(boardButtons[i][j]);
+            }
+        }
+
+        frame.setVisible(true);
+    }
+
+    public void refreshBoard() {
+        for (int i = 0; i < board.cells.length; i++) {
+            for (int j = 0; j < board.cells[i].length; j++) {
+                setBoardCellIcon(i, j, board.cells[i][j]);
+            }
+        }
+        if (board.currentPlayer == Piece.Color.RED) {
+            playerTurnLabel.setText("Red's Turn");
+        } else {
+            playerTurnLabel.setText("Black's Turn");
+        }
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        int row = Integer.parseInt("" + command.charAt(0));
+        int column = Integer.parseInt("" + command.charAt(1));
+        boolean result = board.addRemoveCellToMove(row, column);
+        if (result) {
+            updateSelectedIcon(row, column);
+        }
+        setMoveActionButtonsEnabled(board.isMoveSelected());
+        setSubmitButtonEnabled(board.isMoveValid());
     }
 }

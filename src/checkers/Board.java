@@ -46,6 +46,8 @@ public class Board {
                 }
             }
         }
+        move.clear();
+        currentPlayer = Piece.Color.RED;
     }
 
     public BoardCell getCellAt(int row, int column) {
@@ -64,7 +66,7 @@ public class Board {
         BoardCell cell = getCellAt(row, column);
 
         if (move.isEmpty()) {
-            if (!cell.hasPiece()) {
+            if (!cell.hasPiece() || cell.getPiece().getColor() != currentPlayer) {
                 return false;
             }
             return move.add(cell);
@@ -109,6 +111,15 @@ public class Board {
             }
         }
         move.clear();
+        switchPlayerTurn();
+    }
+
+    public void switchPlayerTurn() {
+        if (currentPlayer == Piece.Color.RED) {
+            currentPlayer = Piece.Color.BLACK;
+        } else {
+            currentPlayer = Piece.Color.RED;
+        }
     }
 
     public void cancelMove() {
