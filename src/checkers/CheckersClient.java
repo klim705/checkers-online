@@ -27,7 +27,6 @@ public class CheckersClient {
         client.addListener(new Listener() {
             // code to run upon successfully connecting with the server
             public void connected(Connection connection) {
-                System.out.println("Connected to server");
                 Network.NewConnect nc = new Network.NewConnect();
                 nc.newClient = "foo";
                 client.sendTCP(nc);
@@ -38,7 +37,6 @@ public class CheckersClient {
                     // Receive the player's color from the server and set the client accordingly
                     Network.Player player = (Network.Player) object;
                     playerColor = player.playerColor;
-                    System.out.println("Received color: " + playerColor.toString());
                     return;
                 }
 
@@ -46,17 +44,24 @@ public class CheckersClient {
                     // Receive an updated board from the server and update the client's board
                     Network.NetBoard updateBoard = (Network.NetBoard) object;
                     if (board == null) {
-                        // insert client side checkers code here
-                        guiManager = new GUIManager();
+                        if (guiManager == null) {
+                            guiManager = new GUIManager();
+                            guiManager.setSubmitListener(new Runnable() {
+                                public void run() {
+                                    Network.NetBoard netBoard = new Network.NetBoard();
+                                    netBoard.board = board;
+                                    client.sendTCP(netBoard);
+                                }
+                            });
 
-                        // This listener is called when the send button is clicked.
-                        guiManager.setSubmitListener(new Runnable() {
-                            public void run() {
-                                Network.NetBoard netBoard = new Network.NetBoard();
-                                netBoard.board = board;
-                                client.sendTCP(netBoard);
-                            }
-                        });
+                            guiManager.setForfeitListener(new Runnable() {
+                                public void run() {
+                                    Network.EndGame endGame = new Network.EndGame();
+                                    endGame.reason = "forfeit";
+                                    client.sendTCP(endGame);
+                                }
+                            });
+                        }
 
                         board = updateBoard.board;
                         guiManager.setup(board);
@@ -64,31 +69,48 @@ public class CheckersClient {
                         board = updateBoard.board;
                         guiManager.refreshBoard();
                     }
-
-                    System.out.println("Client board updated");
                     return;
                 }
 
                 if (object instanceof Network.EndGame) {
                     Network.EndGame endGame = (Network.EndGame) object;
                     String reason = endGame.reason;
+                    int result = JOptionPane.CLOSED_OPTION;
 
                     if (reason.equals("disconnect")) {
                         // display to the user that the other player disconnected
+                        guiManager.showInfo("Your opponent disconnected. The game client will close when this box is closed.");
                     } else if (reason.equals("forfeit")) {
                         // tell the user that the other player forfeited and display the restart option
+                        result = guiManager.showRestart("Your opponent forfeited");
+                    } else if (reason.equals("selfforfeit")) {
+                        result = guiManager.showRestart("You forfeited");
                     } else if (reason.equals("loss")) {
                         // tell the user that he/she lost and prompt for restart
+                        result = guiManager.showRestart("You lost");
                     } else if (reason.equals("win")) {
                         // tell the user that he/she won and prompt for restart
+                        result = guiManager.showRestart("You won");
                     } else if (reason.equals("full")) {
                         // display connection failure and exit the client
+                        System.out.println("Failed to connect because a game is currently in progress. Please wait until the game ends.");
+                    }
+                    if (result == JOptionPane.OK_OPTION) {
+                        Network.RestartGame restartGame = new Network.RestartGame();
+                        restartGame.restart = true;
+                        client.sendTCP(restartGame);
+                    } else if (result == JOptionPane.NO_OPTION) {
+                        Network.RestartGame restartGame = new Network.RestartGame();
+                        restartGame.restart = false;
+                        client.sendTCP(restartGame);
+                        System.exit(0);
+                    } else {
+                        System.exit(0);
                     }
                 }
             }
 
             public void disconnected(Connection connection) {
-                System.out.println("Disconnected from server");
                 if (guiManager != null) {
                     guiManager.cleanup();
                 }
@@ -146,6 +168,21 @@ public class CheckersClient {
         private ImageIcon selectedBlackPieceIcon = new ImageIcon("resources/SelectedBlackMan.png");
         private ImageIcon selectedRedKingIcon = new ImageIcon("resources/SelectedRedKing.png");
         private ImageIcon selectedBlackKingIcon = new ImageIcon("resources/SelectedBlackKing.png");
+
+        private int showRestart(String title) {
+            return JOptionPane.showConfirmDialog(frame,
+                    "Would you like to restart the game?",
+                    title,
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.QUESTION_MESSAGE);
+        }
+
+        private void showInfo(String message) {
+            JOptionPane.showMessageDialog(frame,
+                    message,
+                    "End game",
+                    JOptionPane.INFORMATION_MESSAGE);
+        }
 
         private void setBoardCellIcon(int row, int column, BoardCell cell) {
             if (cell.hasPiece()) {
@@ -239,18 +276,13 @@ public class CheckersClient {
             Container cP = frame.getContentPane();
             cP.add(boardPanel, BorderLayout.CENTER);
             playerTurnPanel.add(playerTurnLabel);
-            forfeitButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    board.resetBoard();
-                    refreshBoard();
-                }
-            });
             cancelMoveButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     board.cancelMove();
                     refreshBoard();
                 }
             });
+            moveActionButtonsPanel.add(forfeitButton);
             moveActionButtonsPanel.add(submitMoveButton);
             moveActionButtonsPanel.add(cancelMoveButton);
             setMoveActionButtonsEnabled(false);
@@ -311,6 +343,15 @@ public class CheckersClient {
                     board.submitMove();
                     setMoveActionButtonsEnabled(false);
                     refreshBoard();
+                    listener.run();
+                }
+            });
+        }
+
+        public void setForfeitListener(final Runnable listener) {
+            forfeitButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent evt) {
+                    setMoveActionButtonsEnabled(false);
                     listener.run();
                 }
             });

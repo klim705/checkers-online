@@ -48,7 +48,6 @@ public class CheckersServer {
                         if (numPlayers == 2) {
                             Network.NetBoard netBoard = new Network.NetBoard();
                             netBoard.board = new Board();
-                            System.out.println("Sending board out to both clients");
                             server.sendToAllTCP(netBoard);
                         }
                     } else {
@@ -64,7 +63,6 @@ public class CheckersServer {
 
                 // code to be executed if the object received is a NetBoard
                 if (object instanceof Network.NetBoard) {
-                    System.out.println("Board update received");
 
                     // Relay the board to the other client
                     Network.NetBoard updateBoard = (Network.NetBoard) object;
@@ -78,7 +76,7 @@ public class CheckersServer {
                             server.sendToTCP(connection.getID(), endGameRed);
                             endGameBlack.reason = "win";
                             server.sendToAllExceptTCP(connection.getID(), endGameBlack);
-                        } else if (updateBoard.board.areAllCaptured(Piece.Color.BLACK) || updateBoard.board.canPlayerMove(Piece.Color.BLACK)) {
+                        } else if (updateBoard.board.areAllCaptured(Piece.Color.BLACK) || !updateBoard.board.canPlayerMove(Piece.Color.BLACK)) {
                             endGameRed.reason = "win";
                             server.sendToTCP(connection.getID(), endGameRed);
                             endGameBlack.reason = "loss";
@@ -90,7 +88,7 @@ public class CheckersServer {
                             server.sendToTCP(connection.getID(), endGameRed);
                             endGameBlack.reason = "loss";
                             server.sendToAllExceptTCP(connection.getID(), endGameBlack);
-                        } else if (updateBoard.board.areAllCaptured(Piece.Color.BLACK) || updateBoard.board.canPlayerMove(Piece.Color.BLACK)) {
+                        } else if (updateBoard.board.areAllCaptured(Piece.Color.BLACK) || !updateBoard.board.canPlayerMove(Piece.Color.BLACK)) {
                             endGameRed.reason = "loss";
                             server.sendToTCP(connection.getID(), endGameRed);
                             endGameBlack.reason = "win";
@@ -106,6 +104,11 @@ public class CheckersServer {
 
                     // relay the reason to the client for it to process
                     server.sendToAllExceptTCP(connection.getID(), endGame);
+                    if (endGame.reason.equals("forfeit")) {
+                        Network.EndGame selfForfeit = new Network.EndGame();
+                        selfForfeit.reason = "selfforfeit";
+                        server.sendToTCP(connection.getID(), selfForfeit);
+                    }
 
                     return;
                 }
@@ -119,7 +122,10 @@ public class CheckersServer {
                             // other client still needs to decide to restart or not
                         } else if (numRestarts == 2) {
                             numRestarts = 0;  // reset the counter
-                            // code to execute that will restart the game
+
+                            Network.NetBoard netBoard = new Network.NetBoard();
+                            netBoard.board = new Board();
+                            server.sendToAllTCP(netBoard);
                         }
                     }
                 }
@@ -132,6 +138,10 @@ public class CheckersServer {
                     //insert code to be executed here
                     System.out.println(((CheckersConnection) c).color + " disconnected");
                     numPlayers--;
+
+                    Network.EndGame endGame = new Network.EndGame();
+                    endGame.reason = "disconnect";
+                    server.sendToAllExceptTCP(connection.getID(), endGame);
                 }
             }
         });

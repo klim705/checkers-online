@@ -62,34 +62,38 @@ public class Board {
         fromCell.removePiece();
     }
 
-    public boolean addRemoveCellToMove(int row, int column) {
+    public boolean addRemoveCellToMove(int row, int column, CheckersMove checkersMove) {
         BoardCell cell = getCellAt(row, column);
 
-        if (move.isEmpty()) {
+        if (checkersMove.isEmpty()) {
             if (!cell.hasPiece() || cell.getPiece().getColor() != currentPlayer) {
                 return false;
             }
-            return move.add(cell);
+            return checkersMove.add(cell);
         }
 
-        BoardCell previousCell = move.get(move.size() - 1);
+        BoardCell previousCell = checkersMove.get(checkersMove.size() - 1);
         if (previousCell.equals(cell)) {
-            return move.removeCell(previousCell);
+            return checkersMove.removeCell(previousCell);
         }
 
-        if (move.isValidMove()) {
+        if (checkersMove.isValidMove()) {
             return false;
         }
 
         if (MoveValidator.isMove(previousCell, cell) && MoveValidator.canMove(previousCell, cell)) {
-            return move.add(cell);
+            return checkersMove.add(cell);
         }
 
         BoardCell cellToJumpOver = getCellAt((row + previousCell.row) / 2, (column + previousCell.column) / 2);
-        if (MoveValidator.isJump(previousCell, cell) && MoveValidator.canJump(move.get(0).getPiece(), previousCell, cell, cellToJumpOver)) {
-            return move.add(cell);
+        if (MoveValidator.isJump(previousCell, cell) && MoveValidator.canJump(checkersMove.get(0).getPiece(), previousCell, cell, cellToJumpOver)) {
+            return checkersMove.add(cell);
         }
         return false;
+    }
+
+    public boolean addRemoveCellToMove(int row, int column) {
+        return addRemoveCellToMove(row, column, move);
     }
 
     public boolean isMoveSelected() {
@@ -170,7 +174,7 @@ public class Board {
 
         for (int i = startRow; i <= endRow; i++) {
             for (int j = startColumn; j <= endColumn; j++) {
-                if (addRemoveCellToMove(i, j)) {
+                if (addRemoveCellToMove(i, j, tempMove)) {
                     return true;
                 }
             }
