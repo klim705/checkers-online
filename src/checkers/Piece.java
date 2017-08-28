@@ -5,14 +5,12 @@ public class Piece {
 
     private Color color;
     private boolean isKing;
-    private boolean selected;
 
     public Piece() {}
 
     public Piece(Color color) {
         this.color = color;
         isKing = false;
-        selected = false;
     }
 
     public Color getColor() {
