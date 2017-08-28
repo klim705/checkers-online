@@ -1,12 +1,14 @@
 package checkerstest;
 
+import checkers.BoardCell;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
-    @Test
+    @org.junit.jupiter.api.Test
     void setupBoard() {
+
     }
 
     @Test
