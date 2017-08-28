@@ -40,7 +40,7 @@ public class MoveValidator {
         int r2 = toCell.row;
         int c2 = toCell.column;
 
-        if (pieceToCapture == null || (pieceToCapture.getColor() == pieceToJump.getColor())) {
+        if (pieceToCapture == null || (pieceToCapture.getColor() == pieceToJump.getColor()) || (toCell.hasPiece())) {
             return false;
         }
 
