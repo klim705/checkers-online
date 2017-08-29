@@ -155,6 +155,7 @@ public class CheckersClient {
         private JButton cancelMoveButton = new JButton("Cancel");
         private JPanel playerTurnPanel = new JPanel();
         private JLabel playerTurnLabel = new JLabel("Red's Turn");
+        private JLabel versionLabel = new JLabel("1.0.1");
 
         private ImageIcon greenSquareIcon = new ImageIcon("resources/OddEmpty.png");
         private ImageIcon whiteSquareIcon = new ImageIcon("resources/EvenEmpty.png");
@@ -280,11 +281,13 @@ public class CheckersClient {
                 public void actionPerformed(ActionEvent e) {
                     board.cancelMove();
                     refreshBoard();
+                    setMoveActionButtonsEnabled(false);
                 }
             });
             moveActionButtonsPanel.add(forfeitButton);
             moveActionButtonsPanel.add(submitMoveButton);
             moveActionButtonsPanel.add(cancelMoveButton);
+            moveActionButtonsPanel.add(versionLabel);
             setMoveActionButtonsEnabled(false);
             bottomButtonsPanel.add(moveActionButtonsPanel, BorderLayout.EAST);
             hudPanel.add(bottomButtonsPanel, BorderLayout.CENTER);
