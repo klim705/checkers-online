@@ -155,7 +155,7 @@ public class CheckersClient {
         private JButton cancelMoveButton = new JButton("Cancel");
         private JPanel playerTurnPanel = new JPanel();
         private JLabel playerTurnLabel = new JLabel("Red's Turn");
-        private JLabel versionLabel = new JLabel("1.0.1");
+        private JLabel versionLabel = new JLabel("1.0.2");
 
         private ImageIcon greenSquareIcon = new ImageIcon("resources/OddEmpty.png");
         private ImageIcon whiteSquareIcon = new ImageIcon("resources/EvenEmpty.png");
