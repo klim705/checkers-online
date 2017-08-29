@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BoardTest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">checkerstest</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BoardTest (checkerstest)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BoardTest</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (13/ 13)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (49/ 49)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package checkerstest;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import checkers.Board;
+<i>4</i>&nbsp;import checkers.BoardCell;
+<i>5</i>&nbsp;import checkers.CheckersMove;
+<i>6</i>&nbsp;import checkers.Piece;
+<i>7</i>&nbsp;import org.junit.jupiter.api.Test;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import static org.junit.jupiter.api.Assertions.*;
+<i>10</i>&nbsp;
+<b class="fc"><i>11</i>&nbsp;class BoardTest {</b>
+<i>12</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>13</i>&nbsp;    void setupBoard()
+<i>14</i>&nbsp;    {
+<i>15</i>&nbsp;
+<b class="fc"><i>16</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>17</i>&nbsp;        assertEquals(b.cells.length,8);</b>
+<b class="fc"><i>18</i>&nbsp;    }</b>
+<i>19</i>&nbsp;
+<i>20</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>21</i>&nbsp;    void resetBoard()
+<i>22</i>&nbsp;    {
+<b class="fc"><i>23</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>24</i>&nbsp;        b.resetBoard();</b>
+<b class="fc"><i>25</i>&nbsp;        assertEquals(b.cells.length,8);</b>
+<b class="fc"><i>26</i>&nbsp;    }</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>29</i>&nbsp;    void getCellAt()
+<i>30</i>&nbsp;    {
+<b class="fc"><i>31</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>32</i>&nbsp;        assertEquals(b.getCellAt(0,0), b.cells[0][0]);</b>
+<b class="fc"><i>33</i>&nbsp;        assertNotEquals(b.getCellAt(2,0), b.cells[3][0]);</b>
+<b class="fc"><i>34</i>&nbsp;    }</b>
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>37</i>&nbsp;    void movePiece()
+<i>38</i>&nbsp;    {
+<b class="fc"><i>39</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>40</i>&nbsp;        BoardCell b1 = new BoardCell(2,3,BoardCell.Color.GREEN);</b>
+<b class="fc"><i>41</i>&nbsp;        Piece p = new Piece(Piece.Color.RED);</b>
+<b class="fc"><i>42</i>&nbsp;        b1.setPiece(p);</b>
+<b class="fc"><i>43</i>&nbsp;        BoardCell b2 = new BoardCell(3,4,BoardCell.Color.GREEN);</b>
+<b class="fc"><i>44</i>&nbsp;        b.movePiece(b1, b2);</b>
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;        assertEquals(b1.getPiece(), null);</b>
+<b class="fc"><i>47</i>&nbsp;        assertEquals(b2.getPiece(), p);</b>
+<b class="fc"><i>48</i>&nbsp;    }</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>51</i>&nbsp;    void addRemoveCellToMove()
+<i>52</i>&nbsp;    {
+<b class="fc"><i>53</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>54</i>&nbsp;        assertFalse(b.addRemoveCellToMove(3,2));</b>
+<b class="fc"><i>55</i>&nbsp;    }</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>59</i>&nbsp;    void isMoveSelected()
+<i>60</i>&nbsp;    {
+<b class="fc"><i>61</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>62</i>&nbsp;        assertFalse(b.isMoveSelected());</b>
+<b class="fc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>66</i>&nbsp;    void isMoveValid()
+<i>67</i>&nbsp;    {
+<b class="fc"><i>68</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>69</i>&nbsp;        assertFalse(b.isMoveValid());</b>
+<b class="fc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>73</i>&nbsp;    void submitMove()
+<i>74</i>&nbsp;    {
+<b class="fc"><i>75</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>76</i>&nbsp;        assertEquals(b.currentPlayer, Piece.Color.RED);</b>
+<i>77</i>&nbsp;        //b.submitMove();
+<b class="fc"><i>78</i>&nbsp;        assertNotEquals(b.currentPlayer, Piece.Color.BLACK);</b>
+<b class="fc"><i>79</i>&nbsp;    }</b>
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>82</i>&nbsp;    void switchPlayerTurn()
+<i>83</i>&nbsp;    {
+<b class="fc"><i>84</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>85</i>&nbsp;        assertEquals(b.currentPlayer, Piece.Color.RED);</b>
+<b class="fc"><i>86</i>&nbsp;        b.switchPlayerTurn();</b>
+<b class="fc"><i>87</i>&nbsp;        assertEquals(b.currentPlayer, Piece.Color.BLACK);</b>
+<b class="fc"><i>88</i>&nbsp;    }</b>
+<i>89</i>&nbsp;
+<i>90</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>91</i>&nbsp;    void cancelMove()
+<i>92</i>&nbsp;    {
+<b class="fc"><i>93</i>&nbsp;        CheckersMove m = new CheckersMove();</b>
+<b class="fc"><i>94</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>95</i>&nbsp;        b.cancelMove();</b>
+<i>96</i>&nbsp;
+<b class="fc"><i>97</i>&nbsp;    }</b>
+<i>98</i>&nbsp;
+<i>99</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>100</i>&nbsp;    void areAllCaptured()
+<i>101</i>&nbsp;    {
+<b class="fc"><i>102</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>103</i>&nbsp;        assertFalse(b.areAllCaptured(Piece.Color.RED));</b>
+<b class="fc"><i>104</i>&nbsp;    }</b>
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    @org.junit.jupiter.api.Test
+<i>107</i>&nbsp;    void canPlayerMove()
+<i>108</i>&nbsp;    {
+<b class="fc"><i>109</i>&nbsp;        Board b = new Board();</b>
+<b class="fc"><i>110</i>&nbsp;        assertTrue(b.canPlayerMove(Piece.Color.RED));</b>
+<b class="fc"><i>111</i>&nbsp;    }</b>
+<i>112</i>&nbsp;
+<i>113</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2017-08-29 14:21</div>
+</div>
+</body>
+</html>

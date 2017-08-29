@@ -6,7 +6,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NetworkTest {
     @Test
-    void register() {
+    void register()
+    {
     }
 
 }
