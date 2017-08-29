@@ -14,11 +14,11 @@ class MoveValidatorTest {
         MoveValidator mv = new MoveValidator();
         BoardCell b1 = new BoardCell(0,2,BoardCell.Color.GREEN);
         BoardCell b2 = new BoardCell(1,2,BoardCell.Color.GREEN);
-        assertFalse(mv.isMove(b1,b2));
+        assertFalse(MoveValidator.isMove(b1,b2));
 
         BoardCell b3 = new BoardCell(3,6,BoardCell.Color.GREEN);
         BoardCell b4 = new BoardCell(4,7,BoardCell.Color.GREEN);
-        assertTrue(mv.isMove(b3,b4));
+        assertTrue(MoveValidator.isMove(b3,b4));
     }
 
     @Test
@@ -27,11 +27,11 @@ class MoveValidatorTest {
         MoveValidator mv = new MoveValidator();
         BoardCell b1 = new BoardCell(0,3,BoardCell.Color.GREEN);
         BoardCell b2 = new BoardCell(2,6,BoardCell.Color.GREEN);
-        assertFalse(mv.isJump(b1,b2));
+        assertFalse(MoveValidator.isJump(b1,b2));
 
         BoardCell b3 = new BoardCell(2,3,BoardCell.Color.GREEN);
         BoardCell b4 = new BoardCell(4,5,BoardCell.Color.GREEN);
-        assertTrue(mv.isJump(b3,b4));
+        assertTrue(MoveValidator.isJump(b3,b4));
     }
 
     @Test
@@ -42,12 +42,12 @@ class MoveValidatorTest {
         BoardCell b1 = new BoardCell(0,2,BoardCell.Color.GREEN);
         b1.setPiece(p);
         BoardCell b2 = new BoardCell(1,2,BoardCell.Color.GREEN);
-        assertFalse(mv.canMove(b1,b2));
+        assertFalse(MoveValidator.canMove(b1,b2));
 
         BoardCell b3 = new BoardCell(2,3,BoardCell.Color.GREEN);
         b3.setPiece(p);
         BoardCell b4 = new BoardCell(3,4,BoardCell.Color.GREEN);
-        assertTrue(mv.canMove(b3,b4));
+        assertTrue(MoveValidator.canMove(b3,b4));
     }
 
     @Test
@@ -62,14 +62,14 @@ class MoveValidatorTest {
         BoardCell b2 = new BoardCell(3,4,BoardCell.Color.GREEN);
         b2.setPiece(pB);
         BoardCell b3 = new BoardCell(4,5,BoardCell.Color.GREEN);
-        assertFalse(mv.canJump(pB,b1,b3,b2));
+        assertFalse(MoveValidator.canJump(pB,b1,b3,b2));
 
         BoardCell b4 = new BoardCell(2,3,BoardCell.Color.GREEN);
         b4.setPiece(pB);
         BoardCell b5 = new BoardCell(3,4,BoardCell.Color.GREEN);
         b5.setPiece(pR);
         BoardCell b6 = new BoardCell(4,5,BoardCell.Color.GREEN);
-        assertTrue(mv.canJump(pB,b4,b6,b5));
+        assertTrue(MoveValidator.canJump(pB,b4,b6,b5));
     }
 
 }
